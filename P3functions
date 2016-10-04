@@ -1,0 +1,136 @@
+#include <iostream>
+#include <vector>
+#include "prog3.h"
+#include <string>
+using namespace std;
+
+Book::Book() //create a 'blank' book
+{
+	title = "";
+	quantity = 0;
+	price = 0;
+}
+
+Book::Book(string bt, int bq, double bp) //add book with the given title, quantity, and price
+{
+	title = bt;
+	quantity = bq;
+	price = bp;
+}
+
+BookList::BookList() //create an empty booklist
+{
+	vector<Book> BL;
+	int count = 0;
+}
+
+BookList::~BookList() //booklist destructor
+{
+	cout << "Deleting list" << endl;
+}
+
+void BookList::insert(string bt, int bq, double bp) //add a book to the booklist, keeping them in the proper order
+{
+	Book newbook = Book(bt, bq, bp); //values of the new book
+	bool add = true; //flag on whether the book actually needs to be added
+	count += newbook.quantity; //add the stock of the new book to the total amount
+
+	if (BL.size() > 0) //if the list isn't empty
+	{
+		for (int i = 0; i < BL.size(); i++) //check each element
+		{
+			if (newbook.title < BL[i].title) //swap the book at that index with the given book if needed to keep the list in the proper order
+			{
+				Book store = BL[i];
+				BL[i] = newbook;
+				newbook = store;
+			}
+			else if (newbook.title == BL[i].title) //if the book already exists
+			{
+				cout << "Book already in the store, updating values." << endl;
+				BL[i].quantity += newbook.quantity;
+				BL[i].price = newbook.price;
+				add = false; //don't add the newbook if it is updating an existing one
+				break; //to prevent overwriting later books
+			}
+		}
+	}
+
+	if (add) //add the book to the list if it doesn't already exist
+	{
+		BL.push_back(newbook);
+	}		
+}
+
+void BookList::search(string key) //find and give information on books using the given search key
+{
+	bool key_found = false; //flag on whether a match was found
+	cout << "Searching for \"" << key << "\" : " << endl;
+	for (int i = 0; i < BL.size(); i++) //search the list for the given key. if a match was found, print out the book's information
+	{
+		if (BL[i].title.find(key) != string::npos)
+		{
+			key_found = true;
+			cout << "Title: " << BL[i].title << ", # of copies: " <<  BL[i].quantity << ", Price: " <<  BL[i].price << endl;
+		}
+	}
+	if (!key_found) //report that none were found if needed
+	{
+		cout << "None are in stock" << endl;
+	}
+}
+
+void BookList::remove(string t) //remove a book when given the exact book name
+{
+	bool match = false; //flag to check if the book exists
+
+	if (BL.size() != 0) //if the list contains books
+	{
+		//check each part of the list and shift the book to be deleted to the end of the vector
+		if (t == BL[BL.size() - 1].title)
+		{
+			match = true;
+		}
+		else
+		{
+			for (int i = 0; i < BL.size() - 1; i++)
+			{
+				if (t == BL[i].title)
+				{
+					match = true;
+					Book store = BL[i];
+					BL[i] = BL[i + 1];
+					BL[i + 1] = store;
+				}
+			}
+		}
+	}
+	if (match) //if a match was found, remove the quantity of the given book from the total and remove that book from the list
+	{
+		count -= BL[BL.size() - 1].quantity;
+		BL.pop_back();
+		cout << "\"" << t << "\" has been deleted" << endl;
+	} 
+	else //if there was no match, report to the user
+	{
+		cout << "\"" << t << "\" is not in the list. Deletion failed" << endl;
+	}
+}
+
+void BookList::print() //print the books in the store
+{
+	if (count == 0) //if there are no books, report to the user
+	{
+		cout << "There are no books in stock." << endl;
+	}
+
+	else //print the books with their quantity and price, also print the total number of books in stock
+	{		
+		cout << "------------------Total: " << count << " Books in Stock-----------------" << endl;
+		for (int i = 0; i < BL.size(); i++)
+		{
+			cout << "Title: " << BL[i].title << ", # of copies: " << BL[i].quantity << ", Price: " << BL[i].price << endl;
+		}
+		cout << "------------------------------------------------------------" << endl;
+	}
+}
