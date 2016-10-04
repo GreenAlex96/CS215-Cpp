@@ -1,0 +1,177 @@
+/*
+Alex Reel
+CS 215
+Section 8
+2/12/2016
+Purpose: Give the user the choice of several math problems. Randomly generates integers
+to use in that problem type, takes the answer and gives feedback on whether it was right or wrong.
+*/
+
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+string format_question(int num)
+{
+	/*Purpose: Decide if spaces need to be added to format the question properly
+	Checks if the number is 1, 2, or 3 digits long. adds 1 space if it has 2 and 2 spaces if it has 1 digit.
+	num is the integer to be checked, the string with the correct number of spaces (if any) is returned.
+	*/
+	string spaces;
+	//check the length of the ingeger, add the appropriate number of spaces
+	if (num < 10)
+	{
+		spaces = "  ";
+	}
+	else if (num < 100)
+	{
+		spaces = " ";
+	}
+	return spaces;
+}
+		
+int main()
+{
+	//problem choice
+	int problem = 0;
+	//integers used in the questions
+	int first_num;
+	int sec_num;
+	//user's answer
+	int answer;
+	//the correct answer
+	int correct;
+
+	srand(time(0)); // seed rand() 
+
+	while (problem != 5) //Continue the program until the user chooses to exit
+	{
+		//print out the menu
+		cout << "     Math Tutor Menu" << endl;
+		cout << "-------------------------" << endl;
+		cout << "1. Addition\n2. Subtraction\n3. Multiplication\n4. Division\n5. Exit program" << endl;
+		cout << "-------------------------" << endl;
+		cout << "Enter problem type (1-5): ";
+		cin >> problem;
+		cin.ignore(500, '\n');
+
+		while (cin.fail() || problem < 1 || problem > 5) //deal with invalid inputs
+		{
+			if (cin.fail())
+			{
+				cin.clear();
+				string check; //move the failed input into a 'garbage' variable
+				cin >> check;
+			}
+			cout << "The valid choices are 1, 2, 3, 4, and 5: "; //ask for valid input
+			cin >> problem;
+			cin.ignore(500, '\n');
+		}
+
+		if (problem == 1) //addition
+		{
+			//set the integers for question, calculate answer
+			first_num = rand() % 500 + 1;
+			sec_num = rand() % 500 + 1;
+			correct = first_num + sec_num;
+
+			//get user's answer and give feedback
+			cout << "  " << format_question(first_num) << first_num << "\n+ " << format_question(sec_num) << sec_num << "\n ----\n  ";
+			cin >> answer; 
+			cin.ignore(500, '\n'); //ignore any decimal given
+
+			if (answer == correct)
+			{
+				cout << "That's correct!" << endl;
+			}
+			else
+			{
+				cout << "Sorry, the correct answer is " << correct << endl;
+			}
+		}
+
+		if (problem == 2) //subtraction
+		{
+			//find integers to use for question
+			first_num = rand() % 999 + 1;
+			sec_num = rand() % 999 + 1;
+			correct = first_num - sec_num; 
+
+			cout << "  " << format_question(first_num) << first_num << "\n- " << format_question(sec_num) << sec_num << "\n ----\n  ";
+			cin >> answer; //calculate and get answer from user
+			cin.ignore(500, '\n');
+
+			if (answer == correct)
+			{
+				cout << "That's correct!" << endl;
+			}
+			else
+			{
+				cout << "Sorry, the correct answer is " << correct << endl;
+			}
+		}
+
+		if (problem == 3) // multiplication
+		{
+			//find integers for question and calculate answer
+			first_num = rand() % 100 + 1;
+			sec_num = rand() % 9 + 1;
+			correct = first_num * sec_num;
+
+			cout << "  " << format_question(first_num) << first_num << "\n* " << format_question(sec_num) << sec_num << "\n ----\n  ";
+			cin >> answer; //take answer and give appropriate feedback
+			cin.ignore(500, '\n');
+
+			if (answer == correct)
+			{
+				cout << "That's correct!" << endl;
+			}
+			else
+			{
+				cout << "Sorry, the correct answer is " << correct << endl;
+			}
+		}
+		if (problem == 4) //division
+		{
+			//find integers to use for question along with the answer, making sure that there is no remainder
+			first_num = rand() % 9 + 1;
+			sec_num = (rand() % 100 + 1) * first_num;
+			correct = sec_num / first_num;
+
+			cout << sec_num << " / " << first_num << " = ";
+			cin >> answer; //take answer, give feedback
+			cin.ignore(500, '\n');
+
+			if (answer == correct)
+			{
+				cout << "That's correct!" << endl;
+			}
+			else
+			{
+				cout << "Sorry, the correct answer is " << correct << endl;
+			}
+		}
+	}
+
+	cout << "Thank you for using the math tutor!" << endl;
+	system("pause");
+	return 0;
+}
+
+/*Test Cases:
+245+343=588 results in 'Correct'
+451+291=722 results in 'The correct answer is 742'
+
+444-630=-186 results in 'correct'
+971-732=528 results in 'The correct answer is 239'
+
+95*7=665 results in 'correct'
+51*3=174 results in 'the correct answer is 153'
+
+174/6=27 results in 'the correct answer is 29
+680/8=65 results in 'correct'
+
+entering 7 or -2 at the menu tells user to give a valid input
+*/
