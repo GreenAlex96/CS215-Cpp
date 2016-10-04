@@ -1,0 +1,55 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+#ifndef book_h
+#define book_h
+
+class Book
+{
+public:
+	Book(); // default constructor
+	Book(string bt, int bq, double bp); // constructor
+private:
+	string title; // book title
+	int quantity; // number of copies in stock
+	double price; // book price
+	// Assign friendship to class BookList
+	// so that BookList object can directly access private data of Book
+	friend class BookList; // Assign friendship to class BookList
+};
+
+class BookList
+{
+public:
+	BookList(); // Constructor
+	~BookList(); // Destructor
+	// Insert a new book record into the book list.
+	// The book has title bt, number of copies in stock bq
+	// and the price bp.
+	// Note that the vector of books should be maintained
+	// in the lexicographical order of the book titles.
+	// If the book title already exists in the list,
+	// then upgrade the quantity by adding bq to current quantity;
+	// and upgrade the price with bp
+	void insert(string bt, int bq, double bp);
+	// Search for matched book titles with the given key
+	// The book title which contains key as substring matches
+	// If a book is found, print its title, quantity and price;
+	// If more than one, display them in lexicographical order
+	// otherwise report No Matched Book is in stock
+	void search(string key);
+	// Delete a book record with title exactly matching t,
+	// If the book is not in stock, report it then do nothing.
+	void remove(string t);
+	// First display totally how many books in stock;
+	// then display the book records in stock in the
+	// lexicographical order of book titles
+	void print();
+	// other member functions if you need…
+private:
+	vector<Book> BL; // a vector to store Book objects in stock
+	int count; // total number of books in stock
+};
+
+#endif
