@@ -1,0 +1,114 @@
+/*
+Alex Reel
+CS 215
+Section 8
+4/07/2016
+*/
+#include <iostream>
+#include <vector>
+#include "prog3.h"
+#include <string>
+using namespace std;
+
+int main()
+{
+	//information for a new book
+	string title;
+	int quantity;
+	double price;
+
+	BookList mylist; //the books in the bookstore
+	int menu = 0; //option entered at the menu
+	string key; //key to search to delete a book
+
+	while (menu != 5)
+	{
+		cout << "Bookstore System Management:\n1. Insert a book record\n2. Delete a book record\n3. Print the current booklist\n4. Search the booklist\n5. Quit" << endl;
+		cin >> menu;
+		cin.ignore(100, '\n'); //ignores decimal places if a float is given
+		while (cin.fail() || menu < 1 || menu > 5) //deal with invalid inputs
+		{
+			if (cin.fail())
+			{
+				cin.clear();
+				string check; //move the failed input into a 'garbage' variable
+				cin >> check;
+			}
+			cout << "Please choose an option on the menu" << endl;//ask for valid input
+			cin >> menu;
+		}
+
+		if (menu == 1)
+		{
+			cout << "Enter the title of the book: "; //get title of book
+			getline(cin, title);
+			cout << "Enter number of books in stock: "; //get the stock of the book to be added
+			cin >> quantity;
+			cin.ignore(100, '\n'); //ignores decimal places if a float is given
+			while (cin.fail() || quantity < 1) //deal with invalid inputs
+			{
+				if (cin.fail())
+				{
+					cin.clear();
+					string check; //move the failed input into a 'garbage' variable
+					cin >> check;
+				}
+				cout << "Not a valid quantity: ";//ask for valid input
+				cin >> quantity;
+			}
+			cout << "Enter price of books: "; //get price of book
+			cin >> price;
+			while (cin.fail() || price < 1) //deal with invalid inputs
+			{
+				cin.ignore(100, '\n');
+				if (cin.fail())
+				{
+					cin.clear();
+					string check; //move the failed input into a 'garbage' variable
+					cin >> check;
+				}
+				cout << "Invalid price: ";//ask for valid input
+				cin >> price;
+			}
+			mylist.insert(title, quantity, price); //add a book with the given information to the list
+		}
+
+		if (menu == 2)
+		{
+				cout << "Enter item to be removed: "; //get the book to be removed
+				getline(cin, title);
+				mylist.remove(title); //attempt to remove the book
+		}
+
+		if (menu == 3)
+		{
+			mylist.print(); //print the current booklist
+		}
+
+		if (menu == 4)
+		{
+			cout << "Enter search keyword: "; //get key to search for
+			getline(cin, key);
+			mylist.search(key); //attempt to find books with the given key
+		}
+	}
+	cout << "Exiting the bookstore." << endl;
+	// Prompt for the user to press ENTER, then wait for a newline.
+	cout << "Press ENTER to continue." << endl;
+	cin.ignore(256, '\n');
+	return 0;
+
+}
+
+/*
+Test Cases:
+Menu:
+Entering 1-5 runs the proper function/ends the program
+Entering a number greater or less than that range asks for a proper input
+Entering a string also asks for proper input
+
+If an option is chosen when the booklist is empty, print will inform the user that the list is 
+empty, while search and delete will report that the book was not found.
+If a book that doesn't exist is searched for or the user tries to delete it, the program reports
+that the book is not in the list.
+*/
